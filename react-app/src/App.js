@@ -8,6 +8,7 @@ export default class App extends React.Component {
         super(props)
         this.state = {
             products: [],
+            errorMsg: ''
         }
     }
     componentDidMount() {
@@ -26,7 +27,20 @@ export default class App extends React.Component {
                 this.setState({ errorMsg: 'Error retreiving data' })
             })
     }
+
+    enviaForm = async e => {
+        e.preventDefault();
+        axios.post('http://localhost:8080/prjApirest/v1/products', JSON.stringify({
+            nome: "ai", descricao: "asd", quantidade: 12, precoVenda: 12
+        }), {
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }, method: 'post'
+            })
+    }
     render() {
+
+        const { products, errorMsg } = this.state;
         return (
             <div id="layout">
                 <div >
@@ -55,7 +69,7 @@ export default class App extends React.Component {
 
                         <div className="content" id="content">
                             <div className="pure-form pure-form-aligned">
-                                <form className="pure-form pure-form-aligned">
+                                <form className="pure-form pure-form-aligned" onSubmit={this.enviaForm} method="post">
                                     <div className="pure-control-group">
                                         <label htmlFor="nome">Nome</label>
                                         <input id="nome" type="text" name="nome" />
@@ -82,6 +96,7 @@ export default class App extends React.Component {
                                 <table className="pure-table">
                                     <thead>
                                         <tr>
+                                            <th>Id</th>
                                             <th>Nome</th>
                                             <th>Descrição</th>
                                             <th>Quantidade</th>
@@ -90,20 +105,22 @@ export default class App extends React.Component {
                                     </thead>
                                     <tbody>
                                         {
-                                            this.state.products.map((product) => {
-                                                return (
+                                            products.length ?
+                                                products.map((product) => {
+                                                    return (
 
-                                                    <tr key={product.id}>
-                                                        <td>{product.nome}</td>
-                                                        <td>{product.descricao}</td>
-                                                        <td>{product.quantidade}</td>
-                                                        <td>{product.precoVenda}</td>
-                                                    </tr>
-                                                )
-                                            })
+                                                        <tr key={product.id}>
+                                                            <td>{product.id}</td>
+                                                            <td>{product.nome}</td>
+                                                            <td>{product.descricao}</td>
+                                                            <td>{product.quantidade}</td>
+                                                            <td>{product.precoVenda}</td>
+                                                        </tr>
+                                                    )
+                                                }) : null
+                                        }{
+                                            errorMsg ? <div>{errorMsg}</div> : null
                                         }
-
-
 
                                     </tbody>
                                 </table>
