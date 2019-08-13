@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
-import { isAuthenticaded } from './services/auth';
+import { isAuthenticated } from './services/auth';
 
 import SignUpPage from './pages/signup/signUp';
 import ProductsPage from './pages/products/products';
@@ -11,10 +11,10 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route
         {...rest}
         render={props =>
-            false ? (
+            isAuthenticated() ? (
                 <Component {...props} />
             ) : (
-                    <Redirect to={{ pathname: "/", state: { from: props.location } }} />
+                   props.history.push("/")
                 )
         }
     />

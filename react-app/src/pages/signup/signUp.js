@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-
+import api from '../../services/api';
 export default class SignUpPage extends React.Component {
 
     state = {
@@ -9,9 +9,20 @@ export default class SignUpPage extends React.Component {
         password: "",
         error: ""
     };
-    signUp = e => {
+    signUp = async e => {
         e.preventDefault();
-        alert("register");
+        const { email, password } = this.state;
+        if (!email || !password) {
+            this.setState({ error: "Preencha todos os dados" });
+        } else {
+            try {
+                await api.post("users/register", { email, password });
+                this.props.history.push("/");
+            } catch (error) {
+                console.log(error)
+                this.setState({error:"ocorreu um erro ao registrar"})
+            }
+        }
     }
     render() {
         return (
@@ -20,9 +31,9 @@ export default class SignUpPage extends React.Component {
                     {this.state.error && <p>{this.state.error}</p>}
 
                     <input type="text"
-                        placeholder="Email" />
+                        placeholder="Email" onChange={e => this.setState({ email: e.target.value })} />
                     <input type="text"
-                        placeholder="Password" />
+                        placeholder="Password" onChange={e => this.setState({ password: e.target.value })} />
 
                     <button type="submit">SignUp</button>
                     <hr />

@@ -2,10 +2,11 @@ import React from 'react';
 import '../../styles/pure-min.css';
 import '../../styles/side-menu.css';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 
 
 
-export default class ProductPage extends React.Component {
+class ProductPage extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -138,3 +139,4 @@ export default class ProductPage extends React.Component {
         );
     }
 }
+export default withRouter(ProductPage);
